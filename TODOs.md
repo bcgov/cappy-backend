@@ -6,3 +6,4 @@ TODOs:
 - Fix the parent/child table listing for Business Areas
 - Replace icons for navigation items
 - Apply Cappy Branding
+- Update colour scheme

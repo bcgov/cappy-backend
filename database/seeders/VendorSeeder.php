@@ -14,7 +14,7 @@ class VendorSeeder extends Seeder
     public function run(): void
     {
         Vendor::create([
-            'name' => 'Deloite',
+            'name' => 'Deloitte',
         ]);
 
         Vendor::create([
