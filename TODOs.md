@@ -7,3 +7,5 @@ TODOs:
 - Apply Cappy Branding
 - Update colour scheme
 - Integrations should return the application if it appears in either column
+X Fix panel labels and buttons for STOB 50 and STOB 60
+- 

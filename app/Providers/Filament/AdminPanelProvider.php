@@ -28,6 +28,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('images/cappy.svg'))
+            ->darkModeBrandLogo(asset('images/cappy-darkmode.svg'))
+            ->brandLogoHeight('2.5rem')
+            ->brandName('Cappy')
             ->colors([
                 'primary' => Color::Amber,
             ])

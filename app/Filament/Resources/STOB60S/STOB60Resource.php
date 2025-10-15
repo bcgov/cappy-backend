@@ -18,7 +18,8 @@ class STOB60Resource extends Resource
 {
     protected static ?string $model = STOB60::class;
 
-    protected static ?string $navigationLabel = 'STOB 60';
+    protected static ?string $modelLabel = 'STOB 60';
+    protected static ?string $pluralModelLabel = 'STOB 60s';
 
     protected static ?string $navigationParentItem = 'Vendors';
 

@@ -18,7 +18,8 @@ class STOB50Resource extends Resource
 {
     protected static ?string $model = STOB50::class;
 
-    protected static ?string $navigationLabel = 'STOB 50';
+    protected static ?string $modelLabel = 'STOB 50';
+    protected static ?string $pluralModelLabel = 'STOB 50s';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
