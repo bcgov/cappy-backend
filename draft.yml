@@ -1,0 +1,101 @@
+models:
+  Application:
+    name: string:400
+    description: text nullable
+    average_daily_users: integer nullable
+    annual_cost: integer nullable
+    cost_function: string:400 nullable
+    cost_per_unit: integer nullable
+    license_summary: text nullable
+    annual_vendor_cost: integer nullable
+    initial_deployment: date nullable
+    end_of_support: date nullable
+    end_of_life: date nullable
+    disposition_deadline: date nullable
+    disposition_decision: string:400 nullable
+    relationships:
+      hasMany: ApplicationVersion
+  Dependency:
+    supporting_application_id: foreign:Application
+    depending_application_id: foreign:Application
+    description: text nullable
+  Component:
+    application_id: foreign:Application
+    component_of_id: foreign:Application
+    description: text nullable
+  Integration:
+    application_id: foreign:Application
+    integrates_with_id: foreign:Application
+    description: text nullable
+    protocol: string nullable
+    direction: enum:sync,inbound,outbound
+    frequency: enum:realtime,daily,weekly,monthly,yearly
+    security: text nullable
+  ApplicationUsers:
+    application_id: foreign:Application
+    user_type_id: foreign:UserType
+    description: text nullable
+  VendorSupport:
+    application_id: foreign:Application
+    STOB60_id: foreign:STOB60
+    description: text nullable
+  Staffing:
+    application_id: foreign:Application
+    STOB50_id: foreign:STOB50
+    description: text nullable
+  ApplicationDocumentation:
+    application_id: foreign:Application
+    documentation_of_id: foreign:Documentation
+    description: text nullable
+  VendorRelationship:
+    vendor_id: foreign:Vendor
+    application_id: foreign:Application
+    contract_id: foreign:Contract
+    description: text nullable
+  Contract:
+    vendor_id: foreign:Vendor
+    description: text nullable
+    start_date: date nullable
+    end_date: date nullable
+  STOB50:
+    title: string:400
+    description: text nullable
+    salary: integer nullable
+    relationships:
+      belongsToMany: Application
+  STOB60:
+    title: string:400
+    description: text nullable
+    rate: integer nullable
+    relationships:
+      belongsTo: Vendor
+      belongsToMany: Application
+  ApplicationVersion:
+    name: string:400
+    release: date nullable
+    end_of_life: date nullable
+    description: text nullable
+    relationships:
+      belongsTo: Application
+  SubjectMatterExpert:
+    name: string:400
+    affiliation_type: string:400 nullable
+    affiliation_id: integer nullable
+    email: string:100 nullable
+  BusinessArea:
+    name: string:400
+    description: text nullable
+  Vendor:
+    name: string:400
+    description: text nullable
+  ApplicationUserType:
+    name: string:400
+    description: string:1000
+  Documentation:
+    name: string:400
+    description: text nullable
+    url: text nullable
+  SubjectMatterExpertApplication:
+    application_id: foreign:Application
+    subject_matter_expert_id: foreign:SubjectMatterExpert
+    description: text nullable

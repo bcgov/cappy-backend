@@ -21,3 +21,11 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/draft.yaml
+.blueprint
+
+**/caddy
+frankenphp
+frankenphp-worker.php
+TODO.md
+claude.md
