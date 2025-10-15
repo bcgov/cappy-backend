@@ -35,7 +35,13 @@ class ApplicationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           'dependencies' => RelationManagers\DependenciesRelationManager::class,
+            'components' => RelationManagers\ComponentsRelationManager::class,
+            'integrations' => RelationManagers\IntegrationsRelationManager::class,
+            'users' => RelationManagers\ApplicationUsersRelationManager::class,
+            'vendors' => RelationManagers\VendorsRelationManager::class,
+            'docs' => RelationManagers\DocumentationRelationManager::class,
+            'smes' => RelationManagers\SubjectMatterExpertsRelationManager::class
         ];
     }
 

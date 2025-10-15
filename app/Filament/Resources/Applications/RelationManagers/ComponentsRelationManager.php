@@ -11,13 +11,14 @@ class ComponentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'components';
 
-    protected static ?string $relatedResource = ApplicationResource::class;
+
 
     public function table(Table $table): Table
     {
         return $table
             ->headerActions([
                 CreateAction::make(),
-            ]);
+            ])
+            ->inverseRelationship('component_of');
     }
 }

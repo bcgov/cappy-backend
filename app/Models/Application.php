@@ -60,10 +60,6 @@ class Application extends Model
     }
 
 
-    public function versions(): HasMany
-    {
-        return $this->hasMany(ApplicationVersion::class);
-    }
 
     public function businessAreas(): HasManyThrough
     {
@@ -81,6 +77,15 @@ class Application extends Model
         'component_of_id')
         ->withPivot('description');
     }
+
+    public function component_of(): BelongsToMany
+    {
+        return $this->belongsToMany(Application::class,
+        'components',
+        'component_of_id',
+        'application_id')
+        ->withPivot('description');
+    }
     
 
     public function dependencies(): BelongsToMany
@@ -89,6 +94,15 @@ class Application extends Model
         'dependencies',
         'depending_application_id',
         'supporting_application_id')
+        ->withPivot('description');
+    }
+
+    public function dependency_of(): BelongsToMany
+    {
+        return $this->belongsToMany(Application::class,
+        'dependencies',
+        'supporting_application_id',
+        'depending_application_id')
         ->withPivot('description');
     }
 
@@ -144,6 +158,11 @@ class Application extends Model
         'application_id',
         'stob60_id')
         ->withPivot('description');
+    }
+
+    public function versions(): HasMany
+    {
+        return $this->hasMany(ApplicationVersion::class);
     }
 
 

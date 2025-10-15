@@ -11,13 +11,11 @@ class DependenciesRelationManager extends RelationManager
 {
     protected static string $relationship = 'dependencies';
 
-    protected static ?string $relatedResource = ApplicationResource::class;
-
     public function table(Table $table): Table
     {
         return $table
             ->headerActions([
                 CreateAction::make(),
-            ]);
+            ])->inverseRelationship('dependency_of');
     }
 }

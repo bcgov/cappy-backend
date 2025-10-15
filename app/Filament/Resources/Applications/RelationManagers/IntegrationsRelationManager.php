@@ -11,8 +11,6 @@ class IntegrationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'integrations';
 
-    protected static ?string $relatedResource = ApplicationResource::class;
-
     public function table(Table $table): Table
     {
         return $table

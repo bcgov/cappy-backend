@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('application_documentations', function (Blueprint $table) {
+        Schema::create('application_documentation', function (Blueprint $table) {
             $table->id();
             $table->foreignId('application_id')->constrained();
-            $table->foreignId('documentation_of_id')->constrained('documentations');
+            $table->foreignId('documentation_id')->constrained('documentations');
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('application_documentations');
+        Schema::dropIfExists('application_documentation');
     }
 };
