@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "laravel-octane.fullname" . }}
+  labels:
+    {{- include "laravel-octane.labels" . | nindent 4 }}
+data:
+  APP_NAME: {{ .Values.laravel.appName | quote }}
+  APP_ENV: {{ .Values.laravel.appEnv | quote }}
+  APP_DEBUG: {{ .Values.laravel.appDebug | quote }}
+  APP_URL: {{ .Values.laravel.appUrl | quote }}
+  
+  # Octane
+  OCTANE_SERVER: {{ .Values.laravel.octane.server | quote }}
+  OCTANE_WORKERS: {{ .Values.laravel.octane.workers | quote }}
+  OCTANE_MAX_REQUESTS: {{ .Values.laravel.octane.maxRequests | quote }}
+  
+  # Database
+ DB_CONNECTION: {{ .Values.laravel.database.connection | quote }}
+  {{- if eq .Values.laravel.database.connection "sqlite" }}
+  DB_DATABASE: {{ .Values.laravel.database.database | quote }}
+  {{- else }}
+  DB_HOST: {{ .Values.laravel.database.host | quote }}
+  DB_PORT: {{ .Values.laravel.database.port | quote }}
+  DB_DATABASE: {{ .Values.laravel.database.database | quote }}
+  DB_USERNAME: {{ .Values.laravel.database.username | quote }}
+  {{- end }}
+  
+  # Cache
+  CACHE_DRIVER: {{ .Values.laravel.cache.driver | quote }}
+  CACHE_PREFIX: {{ .Values.laravel.cache.prefix | quote }}
+  
+  # Session
+  SESSION_DRIVER: {{ .Values.laravel.session.driver | quote }}
+  SESSION_LIFETIME: {{ .Values.laravel.session.lifetime | quote }}
+  
+  # Queue
+  QUEUE_CONNECTION: {{ .Values.laravel.queue.connection | quote }}
+  
+  # Redis
+  REDIS_HOST: {{ .Values.laravel.redis.host | quote }}
+  REDIS_PORT: {{ .Values.laravel.redis.port | quote }}
+  REDIS_DB: {{ .Values.laravel.redis.database | quote }}
+  
+  # Logging
+  LOG_CHANNEL: "stderr"
+  LOG_LEVEL: "info"
+  
+  {{- if .Values.laravel.mail.mailer }}
+  # Mail
+  MAIL_MAILER: {{ .Values.laravel.mail.mailer | quote }}
+  MAIL_HOST: {{ .Values.laravel.mail.host | quote }}
+  MAIL_PORT: {{ .Values.laravel.mail.port | quote }}
+  MAIL_ENCRYPTION: {{ .Values.laravel.mail.encryption | quote }}
+  MAIL_FROM_ADDRESS: {{ .Values.laravel.mail.fromAddress | quote }}
+  MAIL_FROM_NAME: {{ .Values.laravel.mail.fromName | quote }}
+  {{- end }}

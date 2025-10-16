@@ -1,0 +1,67 @@
+{{- if .Values.build.enabled }}
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: {{ include "laravel-octane.fullname" . }}
+  labels:
+    {{- include "laravel-octane.labels" . | nindent 4 }}
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: {{ include "laravel-octane.fullname" . }}
+  labels:
+    {{- include "laravel-octane.labels" . | nindent 4 }}
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ include "laravel-octane.fullname" . }}:{{ .Values.build.tag | default "latest" }}
+  source:
+    type: Git
+    git:
+      uri: {{ .Values.build.git.repository }}
+      ref: {{ .Values.build.git.branch | default "main" }}
+    {{- if .Values.build.git.contextDir }}
+    contextDir: {{ .Values.build.git.contextDir }}
+    {{- end }}
+    {{- if .Values.build.git.secretName }}
+    sourceSecret:
+      name: {{ .Values.build.git.secretName }}
+    {{- end }}
+  strategy:
+    type: Docker
+    dockerStrategy:
+      {{- if .Values.build.dockerfilePath }}
+      dockerfilePath: {{ .Values.build.dockerfilePath }}
+      {{- else }}
+      dockerfilePath: Dockerfile
+      {{- end }}
+      {{- if .Values.build.env }}
+      env:
+        {{- range $key, $value := .Values.build.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+      {{- end }}
+  triggers:
+  {{- if .Values.build.triggers.configChange }}
+  - type: ConfigChange
+  {{- end }}
+  {{- if .Values.build.triggers.imageChange }}
+  - type: ImageChange
+  {{- end }}
+  {{- if .Values.build.triggers.github }}
+  - type: GitHub
+    github:
+      secretReference:
+        name: {{ .Values.build.triggers.github.secretName }}
+  {{- end }}
+  {{- if .Values.build.triggers.generic }}
+  - type: Generic
+    generic:
+      secretReference:
+        name: {{ .Values.build.triggers.generic.secretName }}
+  {{- end }}
+  runPolicy: Serial
+{{- end }}

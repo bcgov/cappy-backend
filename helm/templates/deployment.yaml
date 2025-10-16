@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "laravel-octane.fullname" . }}
+  labels:
+    {{- include "laravel-octane.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "laravel-octane.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "laravel-octane.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- if .Values.persistence.enabled }}
+      initContainers:
+      - name: init-permissions
+        image: busybox:latest
+        command: ['sh', '-c']
+        args:
+        - |
+          mkdir -p /app/database /app/storage/logs
+          touch /app/database/database.sqlite
+          chown -R 1000:1000 /app/database /app/storage/logs
+          chmod -R 775 /app/database /app/storage/logs
+        volumeMounts:
+        - name: database
+          mountPath: /app/database
+        - name: storage
+          mountPath: /app/storage/logs
+      {{- end }}
+      containers:
+      - name: laravel
+        {{- if .Values.build.enabled }}
+        image: {{ include "laravel-octane.fullname" . }}:{{ .Values.build.tag | default "latest" }}
+        {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.laravel.octane.port }}
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "laravel-octane.fullname" . }}
+        - secretRef:
+            name: {{ include "laravel-octane.fullname" . }}
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.livenessProbe.httpGet.path }}
+            port: {{ .Values.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.readinessProbe.httpGet.path }}
+            port: {{ .Values.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+        - name: storage
+          mountPath: /app/storage/logs
+        - name: database
+          mountPath: /app/database
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "laravel-octane.fullname" . }}-storage
+      - name: database
+        persistentVolumeClaim:
+          claimName: {{ include "laravel-octane.fullname" . }}-database
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

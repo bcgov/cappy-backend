@@ -1,0 +1,197 @@
+# Default values for laravel-octane
+
+replicaCount: 2
+
+image:
+  repository: your-registry/laravel-octane
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Laravel application configuration
+laravel:
+  appName: ""
+  appEnv: production
+  appDebug: false
+  appUrl: ""
+  
+  # These should be overridden in production
+  appKey: ""  # base64:YOUR_APP_KEY_HERE
+  
+  # Octane configuration
+  octane:
+    server: frankenphp
+    workers: 4
+    maxRequests: 500
+    host: "0.0.0.0"
+    port: 8000
+  
+  # Database configuration
+   database:
+    connection: sqlite  # Changed from mysql
+    # SQLite specific - path is relative to Laravel root
+    database: /app/database/database.sqlite
+
+  # Cache configuration
+  cache:
+    driver: redis
+    prefix: laravel_cache
+  
+  # Session configuration
+  session:
+    driver: redis
+    lifetime: 120
+  
+  # Queue configuration
+  queue:
+    connection: redis
+    driver: redis
+  
+  # Redis configuration
+  redis:
+    host: redis-service
+    port: 6379
+    password: ""
+    database: 0
+  
+  # Mail configuration (optional)
+  mail:
+    mailer: smtp
+    host: ""
+    port: 587
+    username: ""
+    password: ""
+    encryption: tls
+    fromAddress: ""
+    fromName: ""
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+# OpenShift Route configuration
+route:
+  enabled: true
+  host: ""  # Leave empty for auto-generated
+  path: /
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+# Resource limits
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Autoscaling
+replicaCount: 1
+autoscaling:
+  enabled: false
+
+
+# Probes
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 8000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Persistent storage
+persistence:
+  enabled: true
+  storageClass: ""  # Use default storage class
+  accessMode: ReadWriteMany
+  size: 5Gi
+  mountPath: /app/storage/logs
+
+# Redis deployment
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  persistence:
+    enabled: false
+    size: 1Gi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod labels
+podLabels: {}
+
+
+build:
+  enabled: true
+  tag: latest
+  git:
+    repository: https://github.com/your-org/your-laravel-app.git
+    branch: main
+    contextDir: ""  # If Dockerfile is not in root
+    secretName: ""  # For private repos
+  dockerfilePath: Dockerfile
+  env: {}
+    # Add build-time environment variables if needed
+    # COMPOSER_AUTH: '{"github-oauth": {"github.com": "token"}}'
+  triggers:
+    configChange: true
+    imageChange: true
+    github:
+      enabled: false
+      secretName: github-webhook-secret
+    generic:
+      enabled: false
+      secretName: generic-webhook-secret
+
+image:
+  # When using BuildConfig, reference the ImageStream
+  repository: ""  # Leave empty, will use ImageStream
+  pullPolicy: Always
+  tag: latest

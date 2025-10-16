@@ -1,0 +1,14 @@
+apiVersion: v2
+name: laravel-octane
+description: A Helm chart for Laravel Octane with FrankenPHP on OpenShift
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - laravel
+  - octane
+  - frankenphp
+  - php
+maintainers:
+  - name: Jeremy Vernon
+    email: jeremy.vernon@gov.bc.ca
