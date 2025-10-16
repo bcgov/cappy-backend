@@ -13,10 +13,10 @@ fullnameOverride: ""
 
 # Laravel application configuration
 laravel:
-  appName: ""
+  appName: "Laravel-Octane App"
   appEnv: production
   appDebug: false
-  appUrl: ""
+  appUrl: "https://octane-app.apps.silver.devops.bc.ca"
   
   # These should be overridden in production
   appKey: ""  # base64:YOUR_APP_KEY_HERE
@@ -30,7 +30,7 @@ laravel:
     port: 8000
   
   # Database configuration
-   database:
+  database:
     connection: sqlite  # Changed from mysql
     # SQLite specific - path is relative to Laravel root
     database: /app/database/database.sqlite

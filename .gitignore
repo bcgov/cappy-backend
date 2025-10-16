@@ -29,3 +29,4 @@ frankenphp
 frankenphp-worker.php
 TODO.md
 claude.md
+helm/my-values.yaml

@@ -16,7 +16,7 @@ data:
   OCTANE_MAX_REQUESTS: {{ .Values.laravel.octane.maxRequests | quote }}
   
   # Database
- DB_CONNECTION: {{ .Values.laravel.database.connection | quote }}
+  DB_CONNECTION: {{ .Values.laravel.database.connection | quote }}
   {{- if eq .Values.laravel.database.connection "sqlite" }}
   DB_DATABASE: {{ .Values.laravel.database.database | quote }}
   {{- else }}

@@ -9,8 +9,9 @@ RUN npm ci
 COPY resources ./resources
 COPY public ./public
 COPY vite.config.js ./
-COPY tailwind.config.js* ./
-COPY postcss.config.js* ./
+# These are common files for a laravel install but nay not exist in all.
+# COPY tailwind.config.js* ./
+# COPY postcss.config.js* ./
 
 RUN npm run build
 
