@@ -158,8 +158,7 @@ affinity: {}
 # Security Context
 securityContext:
   runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
+  
 
 # Pod annotations
 podAnnotations: {}

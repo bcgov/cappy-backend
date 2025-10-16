@@ -40,7 +40,8 @@ spec:
         - |
           mkdir -p /app/database /app/storage/logs
           touch /app/database/database.sqlite
-          chown -R 1000:1000 /app/database /app/storage/logs
+          # Use current user instead of hardcoded 1000
+          chown -R $(id -u):$(id -g) /app/database /app/storage/logs
           chmod -R 775 /app/database /app/storage/logs
         volumeMounts:
         - name: database
