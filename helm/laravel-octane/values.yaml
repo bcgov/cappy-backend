@@ -172,7 +172,7 @@ build:
   enabled: true
   tag: latest
   git:
-    repository: https://github.com/your-org/your-laravel-app.git
+    repository: https://github.com/bcgov/cappy-backend.git
     branch: main
     contextDir: ""  # If Dockerfile is not in root
     secretName: ""  # For private repos
