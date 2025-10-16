@@ -9,7 +9,6 @@
         "php": "^8.2",
         "aliziodev/laravel-taxonomy": "^2.6",
         "filament/filament": "^4.0",
-        "filament/spatie-laravel-media-library-plugin": "^4.0",
         "filament/spatie-laravel-tags-plugin": "^4.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
