@@ -30,3 +30,8 @@ frankenphp-worker.php
 TODO.md
 claude.md
 helm/my-values.yaml
+GEMINI.md
+app/.DS_Store
+app/Filament/.DS_Store
+database/.DS_Store
+.DS_Store
